@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:weather/screens/location_screen.dart';
@@ -15,7 +16,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     getLocationData();
-    print('initState code is triggered');
+    if (kDebugMode) {
+      print('initState code is triggered');
+    }
   }
 
   void getLocationData() async {
@@ -31,7 +34,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: SpinKitWanderingCubes(
           color: Colors.purple,

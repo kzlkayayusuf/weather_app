@@ -4,7 +4,7 @@ import 'package:weather/utilities/constants.dart';
 import 'package:weather/services/weather.dart';
 
 class LocationScreen extends StatefulWidget {
-  const LocationScreen({this.locationWeather});
+  const LocationScreen({super.key, this.locationWeather});
 
   final locationWeather;
 
@@ -50,13 +50,13 @@ class _LocationScreenState extends State<LocationScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/location_background.jpg'),
+            image:const AssetImage('assets/images/location_background.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
                 Colors.white.withOpacity(0.8), BlendMode.dstATop),
           ),
         ),
-        constraints: BoxConstraints.expand(),
+        constraints:const BoxConstraints.expand(),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,19 +70,23 @@ class _LocationScreenState extends State<LocationScreen> {
                       var weatherData =await WeatherModel().getLocationWeather();
                       updateUI(weatherData);
                     },
-                    child: Icon(
+                    child:const Icon(
                       Icons.near_me,
                       size: 50.0,
                       color: Colors.white,
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    onPressed: ()async {
+                     var typedName=await Navigator.push(context, MaterialPageRoute(builder: (context) {
                         return CityScreen();
                       }));
+                     if(typedName !=null) {
+                      var weatherData=await weatherModel.getCityWeather(typedName);
+                      updateUI(weatherData);
+                     }
                     },
-                    child: Icon(
+                    child:const Icon(
                       Icons.location_city,
                       size: 50.0,
                       color: Colors.white,
@@ -91,7 +95,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
+                padding:const EdgeInsets.only(left: 15.0),
                 child: Row(
                   children: <Widget>[
                     Text(
@@ -106,7 +110,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 15.0),
+                padding:const EdgeInsets.only(right: 15.0),
                 child: Text(
                   '$weatherMessage in $cityName',
                   textAlign: TextAlign.right,
