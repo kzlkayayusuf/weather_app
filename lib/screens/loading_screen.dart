@@ -1,8 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:weather/screens/location_screen.dart';
 import 'package:weather/services/location.dart';
-import 'package:http/http.dart' as http;
+import 'package:weather/services/networking.dart';
+
+
 
 const apiKey = '22a69b5bc909a7b7cc5da4fa07e23804';
 
@@ -20,49 +23,44 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    getLocation();
+    getLocationData();
     print('initState code is triggered');
   }
 
-  void getLocation() async {
+  void getLocationData() async {
     Location location = Location();
     await location.getCurrentLocation();
+
     latitude = location.latitude;
     longitude = location.longitude;
+
+    NetworkHelper networkHelper=NetworkHelper(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey'),);
+
+    var weatherData=await networkHelper.getData();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return LocationScreen();
+    }));
 
     print(latitude);
     print(longitude);
 
-    getData();
+
   }
 
-  /*https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}*/
-  void getData() async {
 
-    var url = Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey');
 
-    http.Response response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      String data = response.body;
-      var decodedData = jsonDecode(data);
-
-      double temperature = decodedData['main']['temp'];
-      int condition = decodedData['weather'][0]['id'];
-      String cityName = decodedData['name'];
-
-      print(temperature);
-      print(condition);
-      print(cityName);
-    } else {
-      print(response.statusCode);
-      print('olmadı');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: SpinKitWanderingCubes(
+          color: Colors.purple,
+          size: 100.0,
+        ),
+      ),
+    );
   }
 }
